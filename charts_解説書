@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>charts.py Python 学習用解説書</title>
+<style>
+  /* ===== 全体レイアウト ===== */
+  body {
+    font-family: "Yu Gothic", "Meiryo", sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #1a1a2e;
+    background: #f7f9fc;
+    margin: 0;
+    padding: 0;
+  }
+  .page-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ===== 見出し ===== */
+  h1 {
+    font-size: 2rem;
+    color: #fff;
+    background: linear-gradient(135deg, #1565c0, #0288d1);
+    padding: 24px 32px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  h1 .sub { font-size: 1rem; font-weight: normal; opacity: 0.85; }
+  h2 {
+    font-size: 1.4rem;
+    color: #1565c0;
+    border-left: 5px solid #1565c0;
+    padding-left: 12px;
+    margin-top: 52px;
+  }
+  h3 {
+    font-size: 1.15rem;
+    color: #0277bd;
+    margin-top: 32px;
+    border-bottom: 1px dashed #b0bec5;
+    padding-bottom: 4px;
+  }
+  h4 {
+    font-size: 1rem;
+    color: #37474f;
+    margin-top: 20px;
+    margin-bottom: 4px;
+  }
+
+  /* ===== テキスト装飾 ===== */
+  p { margin: 8px 0; }
+  code {
+    background: #e3f2fd;
+    color: #1a237e;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.9em;
+  }
+  strong { color: #b71c1c; }
+
+  /* ===== コードブロック ===== */
+  pre {
+    background: #1e272e;
+    color: #ecf0f1;
+    border-radius: 10px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.88em;
+    line-height: 1.65;
+    position: relative;
+  }
+  pre .kw  { color: #81d4fa; }   /* キーワード */
+  pre .fn  { color: #fff176; }   /* 関数名 */
+  pre .st  { color: #a5d6a7; }   /* 文字列 */
+  pre .cm  { color: #78909c; font-style: italic; } /* コメント */
+  pre .nb  { color: #ffcc80; }   /* 組み込み */
+  pre .tp  { color: #ce93d8; }   /* 型ヒント */
+
+  /* ===== ボックス ===== */
+  .box {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .box-blue  { background: #e3f2fd; border-left: 4px solid #1565c0; }
+  .box-green { background: #e8f5e9; border-left: 4px solid #2e7d32; }
+  .box-orange{ background: #fff3e0; border-left: 4px solid #e65100; }
+  .box-gray  { background: #eceff1; border-left: 4px solid #546e7a; }
+  .box-red   { background: #fce4ec; border-left: 4px solid #c62828; }
+  .box-title { font-weight: bold; margin-bottom: 6px; font-size: 0.95rem; }
+
+  /* ===== テーブル ===== */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12px 0;
+    font-size: 0.92rem;
+  }
+  th {
+    background: #1565c0;
+    color: #fff;
+    padding: 8px 14px;
+    text-align: left;
+  }
+  td { padding: 7px 14px; border-bottom: 1px solid #cfd8dc; }
+  tr:nth-child(even) td { background: #f1f8ff; }
+
+  /* ===== ステップバッジ ===== */
+  .step {
+    display: inline-block;
+    background: #1565c0;
+    color: #fff;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+    font-weight: bold;
+    margin-right: 6px;
+    font-size: 0.85rem;
+  }
+
+  /* ===== 目次 ===== */
+  .toc {
+    background: #fff;
+    border: 1px solid #b0bec5;
+    border-radius: 10px;
+    padding: 20px 28px;
+    margin: 24px 0;
+  }
+  .toc ul { margin: 6px 0; padding-left: 20px; }
+  .toc li { margin: 4px 0; }
+  .toc a { color: #1565c0; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ===== データフロー図 ===== */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 12px 0;
+    font-size: 0.88rem;
+  }
+  .flow-box {
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
+    border-radius: 6px;
+    padding: 4px 12px;
+    color: #0d47a1;
+    font-family: "Consolas", monospace;
+  }
+  .flow-arrow { color: #78909c; font-size: 1.2rem; }
+
+  hr { border: none; border-top: 1px solid #cfd8dc; margin: 40px 0; }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- ===== 表紙 ===== -->
+<h1>
+  charts.py　Python 学習用解説書
+  <div class="sub">特許マップビューアー ／ グラフ描画モジュール</div>
+</h1>
+<p style="color:#546e7a; font-size:0.9rem;">対象ファイル：<code>C:\Usersጨ96\patent_map\app\patent_map_viewer\charts.py</code></p>
+
+<!-- ===== 目次 ===== -->
+<div class="toc">
+  <strong>目次</strong>
+  <ul>
+    <li><a href="#sec1">1. このファイルの役割</a></li>
+    <li><a href="#sec2">2. ライブラリのインポート</a></li>
+    <li><a href="#sec3">3. Python の基礎知識：型ヒントと関数の書き方</a></li>
+    <li><a href="#sec4">4. pandas の重要操作まとめ</a></li>
+    <li><a href="#sec5">5. 各グラフ関数の詳細解説</a>
+      <ul>
+        <li><a href="#fn1">関数① chart_pivot_applicant_year（ヒートマップ）</a></li>
+        <li><a href="#fn2">関数② chart_bar_applicant（棒グラフ）</a></li>
+        <li><a href="#fn3">関数③ chart_ipc_distribution（IPC分布）</a></li>
+        <li><a href="#fn4">関数④ chart_trend_by_applicant（折れ線グラフ）</a></li>
+        <li><a href="#fn5">関数⑤ chart_bubble（バブルチャート）</a></li>
+        <li><a href="#fn6">関数⑥ chart_ipc_by_applicant（ドーナツ円グラフ）</a></li>
+      </ul>
+    </li>
+    <li><a href="#sec6">6. Plotly の基本パターン</a></li>
+    <li><a href="#sec7">7. 学習チェックリスト</a></li>
+  </ul>
+</div>
+
+
+<!-- ===== 1. 役割 ===== -->
+<h2 id="sec1">1. このファイルの役割</h2>
+
+<p><code>charts.py</code> はアプリ全体の「<strong>グラフ専用の部品箱</strong>」です。</p>
+<p>特許データ（pandas の DataFrame）を受け取り、Plotly の Figure（グラフオブジェクト）を返す関数を6本まとめています。<br>
+メインの <code>app.py</code> はこれらの関数を呼び出すだけでよく、グラフの細かい処理はここに隠蔽されています。</p>
+
+<div class="box box-blue">
+  <div class="box-title">設計のポイント：役割分担（関心の分離）</div>
+  <table>
+    <tr><th>ファイル</th><th>役割</th></tr>
+    <tr><td><code>app.py</code></td><td>画面レイアウト・フィルター操作・各関数の呼び出し</td></tr>
+    <tr><td><code>charts.py</code></td><td>データ集計 → グラフ生成（このファイル）</td></tr>
+    <tr><td><code>data_loader.py</code></td><td>データベース読み込み・前処理</td></tr>
+  </table>
+</div>
+
+
+<!-- ===== 2. インポート ===== -->
+<h2 id="sec2">2. ライブラリのインポート</h2>
+
+<pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> plotly.express <span class="kw">as</span> px
+<span class="kw">import</span> plotly.graph_objects <span class="kw">as</span> go
+
+<span class="kw">from</span> data_loader <span class="kw">import</span> COL_APPLICANT, COL_YEAR, COL_IPC_MAIN, COL_IPC_LIST</code></pre>
+
+<table>
+  <tr><th>ライブラリ</th><th>別名</th><th>用途</th></tr>
+  <tr><td><code>pandas</code></td><td><code>pd</code></td><td>表形式データ（DataFrame）の操作。集計・並び替え・フィルターなど</td></tr>
+  <tr><td><code>plotly.express</code></td><td><code>px</code></td><td>シンプルな API でグラフを1行で生成できる高水準ライブラリ</td></tr>
+  <tr><td><code>plotly.graph_objects</code></td><td><code>go</code></td><td>低水準 API。<code>go.Figure()</code> で空グラフを作るときなどに使う</td></tr>
+  <tr><td><code>data_loader</code></td><td>—</td><td>同じフォルダの自作モジュールから列名定数を借用</td></tr>
+</table>
+
+<div class="box box-green">
+  <div class="box-title">「as」で別名をつける理由</div>
+  <code>import pandas as pd</code> は「pandas を pd という短い名前で使う」という宣言です。<br>
+  以後 <code>pd.DataFrame</code> と書けば済むので、コードが短くなります。<br>
+  慣習として <code>pandas → pd</code>、<code>plotly.express → px</code> は世界中のコードで統一されています。
+</div>
+
+<div class="box box-orange">
+  <div class="box-title">定数のインポート（列名）</div>
+  <code>COL_APPLICANT</code>、<code>COL_YEAR</code> などは <code>data_loader.py</code> で定義された文字列定数です（例：<code>COL_YEAR = "year"</code>）。<br>
+  列名をハードコードせず定数として参照することで、<strong>列名を変えるときに1か所直せば済む</strong>メリットがあります。
+</div>
+
+
+<!-- ===== 3. 型ヒントと関数 ===== -->
+<h2 id="sec3">3. Python の基礎知識：型ヒントと関数の書き方</h2>
+
+<h3>3-1. 型ヒント（Type Hints）</h3>
+
+<pre><code><span class="kw">def</span> <span class="fn">chart_pivot_applicant_year</span>(
+    df: <span class="tp">pd.DataFrame</span>,
+    year_range: <span class="tp">tuple[int, int] | None</span> = <span class="nb">None</span>,
+) -> <span class="tp">go.Figure</span>:</code></pre>
+
+<p>コロン（<code>:</code>）や矢印（<code>-&gt;</code>）のあとに書かれているのが<strong>型ヒント</strong>です。<br>
+Python は動的型付け言語なので型ヒントがなくても動きますが、書くことで以下の恩恵があります。</p>
+
+<table>
+  <tr><th>型ヒント</th><th>意味</th></tr>
+  <tr><td><code>df: pd.DataFrame</code></td><td>引数 df は pandas の DataFrame である</td></tr>
+  <tr><td><code>year_range: tuple[int, int] | None</code></td><td>整数2つのタプル、または None のどちらかを受け取る</td></tr>
+  <tr><td><code>= None</code></td><td>デフォルト値。呼び出し時に省略可能</td></tr>
+  <tr><td><code>-> go.Figure</code></td><td>この関数は Plotly の Figure を返す</td></tr>
+</table>
+
+<div class="box box-blue">
+  <div class="box-title">Python 3.10 以降の書き方：<code>X | Y</code></div>
+  <code>tuple[int, int] | None</code> は「タプルか None のどちらか」という意味です。<br>
+  Python 3.9 以前では <code>Optional[Tuple[int, int]]</code> と書く必要がありました。<code>|</code> は新しくシンプルな書き方です。
+</div>
+
+<h3>3-2. メソッドチェーン（点でつなぐ記法）</h3>
+
+<p>このコードの最大の特徴は<strong>メソッドチェーン</strong>です。括弧で囲むことで改行できます。</p>
+
+<pre><code>pivot = (
+    work.<span class="fn">groupby</span>([COL_APPLICANT, COL_YEAR])   <span class="cm"># ① グループ化</span>
+    .<span class="fn">size</span>()                                    <span class="cm"># ② 件数カウント</span>
+    .<span class="fn">reset_index</span>(name=<span class="st">"count"</span>)               <span class="cm"># ③ 列に戻す</span>
+    .<span class="fn">pivot</span>(index=..., columns=..., values=...) <span class="cm"># ④ 表を縦→横に変換</span>
+    .<span class="fn">fillna</span>(0)                                  <span class="cm"># ⑤ 欠損を0に</span>
+    .<span class="fn">astype</span>(int)                                <span class="cm"># ⑥ 整数型に変換</span>
+)</code></pre>
+
+<div class="box box-green">
+  <div class="box-title">メソッドチェーンのコツ</div>
+  各行が「前の結果を受け取って次の処理を渡す」バトンリレーです。<br>
+  変数に代入しながら書くこともできますが、チェーンにするとデータの流れが一目で分かります。
+</div>
+
+
+<!-- ===== 4. pandas の重要操作 ===== -->
+<h2 id="sec4">4. pandas の重要操作まとめ</h2>
+
+<h3>4-1. dropna — 欠損値の除去</h3>
+<pre><code>work = df.<span class="fn">dropna</span>(subset=[COL_YEAR]).<span class="fn">copy</span>()</code></pre>
+<p><code>dropna(subset=[列名])</code> は指定列が <code>NaN</code>（空欄）の行を取り除きます。<br>
+<code>.copy()</code> は元の DataFrame を変更しないよう安全にコピーを作ります。</p>
+
+<div class="box box-orange">
+  <div class="box-title">なぜ .copy() が必要か</div>
+  pandas は場合によって元 DataFrame への「参照（ビュー）」を返します。<br>
+  <code>.copy()</code> なしで値を変更すると <code>SettingWithCopyWarning</code> が出ることがあります。<br>
+  安全のため、加工する前に必ず <code>.copy()</code> する習慣をつけましょう。
+</div>
+
+<h3>4-2. groupby + size — グループ別の件数カウント</h3>
+
+<pre><code>work.<span class="fn">groupby</span>([<span class="st">"applicant"</span>, <span class="st">"year"</span>]).<span class="fn">size</span>().<span class="fn">reset_index</span>(name=<span class="st">"count"</span>)</code></pre>
+
+<div class="flow">
+  <div class="flow-box">元のデータ<br>（行：特許1件ずつ）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">groupby<br>（出願人・年でグループ化）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">size()<br>（グループ内の行数）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">reset_index<br>（多重インデックスを列に戻す）</div>
+</div>
+
+<p>結果のイメージ：</p>
+<table>
+  <tr><th>applicant</th><th>year</th><th>count</th></tr>
+  <tr><td>三菱電機</td><td>2010</td><td>42</td></tr>
+  <tr><td>三菱電機</td><td>2011</td><td>38</td></tr>
+  <tr><td>トヨタ</td><td>2010</td><td>87</td></tr>
+</table>
+
+<div class="box box-blue">
+  <div class="box-title">size() と count() の違い</div>
+  <code>size()</code> はグループの行数（NaN も含む）を返します。<br>
+  <code>count()</code> は各列ごとに非NaN の数を返します。行数を数えたいときは <code>size()</code> が正確です。
+</div>
+
+<h3>4-3. pivot — 縦長テーブルを横広テーブルに変換</h3>
+
+<pre><code>.pivot(index=<span class="st">"applicant"</span>, columns=<span class="st">"year"</span>, values=<span class="st">"count"</span>)</code></pre>
+
+<p>「縦長（tidy）形式」を「クロス集計表」に変換します。</p>
+
+<table>
+  <tr><th>変換前（縦長）</th><th></th><th>変換後（クロス集計表）</th></tr>
+  <tr>
+    <td>
+      <table>
+        <tr><th>applicant</th><th>year</th><th>count</th></tr>
+        <tr><td>三菱電機</td><td>2010</td><td>42</td></tr>
+        <tr><td>三菱電機</td><td>2011</td><td>38</td></tr>
+        <tr><td>トヨタ</td><td>2010</td><td>87</td></tr>
+        <tr><td>トヨタ</td><td>2011</td><td>91</td></tr>
+      </table>
+    </td>
+    <td style="padding:0 20px; font-size:1.5rem;">→</td>
+    <td>
+      <table>
+        <tr><th>applicant</th><th>2010</th><th>2011</th></tr>
+        <tr><td>三菱電機</td><td>42</td><td>38</td></tr>
+        <tr><td>トヨタ</td><td>87</td><td>91</td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<div class="box box-orange">
+  <div class="box-title">pivot の引数3つ</div>
+  <code>index</code>：行ラベルにする列<br>
+  <code>columns</code>：列ラベルにする列<br>
+  <code>values</code>：セルに入れる値の列
+</div>
+
+<h3>4-4. fillna — 欠損値を別の値で埋める</h3>
+<pre><code>.fillna(0)</code></pre>
+<p>pivot すると、データが存在しない組み合わせは <code>NaN</code>（空欄）になります。<br>
+<code>.fillna(0)</code> で <code>0</code> に置換します。「その年に出願なし」を「0件」として扱うためです。</p>
+
+<h3>4-5. reindex — 存在しない列・行を追加する</h3>
+<pre><code>pivot = pivot.<span class="fn">reindex</span>(columns=all_years, fill_value=0)</code></pre>
+<p>上位30社が2002年に1件も出願していない場合、pivot に2002年の列がそもそも存在しません。<br>
+<code>reindex</code> に「あるべき全列のリスト」を渡すことで、存在しない列も <code>0</code> で追加できます。</p>
+
+<div class="box box-red">
+  <div class="box-title">このアプリで修正した実際のバグ</div>
+  「上位30社」選択時に2002年のデータが表示されない、というバグが発生しました。<br>
+  原因はまさにこれ：上位30社に2002年出願者がいなかったため pivot に2002列が生成されなかった。<br>
+  <code>reindex</code> で全年を強制的に列に含めることで修正しました。
+</div>
+
+<h3>4-6. sort_values + loc — 合計件数で行を並び替える</h3>
+<pre><code>pivot = pivot.<span class="fn">loc</span>[pivot.<span class="fn">sum</span>(axis=1).<span class="fn">sort_values</span>(ascending=<span class="nb">False</span>).index]</code></pre>
+
+<div class="flow">
+  <div class="flow-box">sum(axis=1)<br>（各行の合計）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">sort_values(ascending=False)<br>（件数の多い順に並び替え）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">.index<br>（並び替え後の出願人名リスト）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">pivot.loc[...]<br>（その順に pivot を並び替え）</div>
+</div>
+
+<div class="box box-blue">
+  <div class="box-title">axis=0 と axis=1 の違い</div>
+  <code>axis=0</code>（デフォルト）：列方向に計算（各列の合計 → 1行になる）<br>
+  <code>axis=1</code>：行方向に計算（各行の合計 → 1列になる）<br>
+  ヒートマップでは「各出願人の総出願数」が欲しいので <code>axis=1</code>（各行の合計）を使います。
+</div>
+
+<h3>4-7. value_counts — 値の出現頻度を集計</h3>
+<pre><code>df[COL_APPLICANT].<span class="fn">value_counts</span>()</code></pre>
+<p>指定列の値ごとの出現回数を、多い順に Series で返します。</p>
+<table>
+  <tr><th>applicant</th><th>件数</th></tr>
+  <tr><td>トヨタ自動車</td><td>312</td></tr>
+  <tr><td>本田技研工業</td><td>287</td></tr>
+  <tr><td>…</td><td>…</td></tr>
+</table>
+
+<h3>4-8. explode — リスト列を行に展開</h3>
+<pre><code>ipc_series = sub[COL_IPC_LIST].<span class="fn">explode</span>()</code></pre>
+<p>1つのセルにリストが入っている列を、1要素1行に展開します。</p>
+<table>
+  <tr><th>変換前（1行にリスト）</th><th></th><th>変換後（1行に1要素）</th></tr>
+  <tr>
+    <td><table>
+      <tr><th>ipc_list</th></tr>
+      <tr><td>["G01B", "G06F"]</td></tr>
+      <tr><td>["H04L"]</td></tr>
+    </table></td>
+    <td style="padding:0 20px; font-size:1.5rem;">→</td>
+    <td><table>
+      <tr><th>ipc_list</th></tr>
+      <tr><td>G01B</td></tr>
+      <tr><td>G06F</td></tr>
+      <tr><td>H04L</td></tr>
+    </table></td>
+  </tr>
+</table>
+
+
+<!-- ===== 5. 各関数の解説 ===== -->
+<h2 id="sec5">5. 各グラフ関数の詳細解説</h2>
+
+<!-- ===== 関数① ===== -->
+<h3 id="fn1">関数① chart_pivot_applicant_year　ヒートマップ（PIVOTテーブル）</h3>
+
+<pre><code><span class="kw">def</span> <span class="fn">chart_pivot_applicant_year</span>(
+    df: <span class="tp">pd.DataFrame</span>,
+    year_range: <span class="tp">tuple[int, int] | None</span> = <span class="nb">None</span>,
+) -> <span class="tp">go.Figure</span>:
+    work = df.<span class="fn">dropna</span>(subset=[COL_YEAR]).<span class="fn">copy</span>()
+    work[COL_YEAR] = work[COL_YEAR].<span class="fn">astype</span>(int)          <span class="cm"># ① Int64 → int に変換</span>
+
+    pivot = (
+        work.<span class="fn">groupby</span>([COL_APPLICANT, COL_YEAR])
+        .<span class="fn">size</span>()
+        .<span class="fn">reset_index</span>(name=<span class="st">"count"</span>)
+        .<span class="fn">pivot</span>(index=COL_APPLICANT, columns=COL_YEAR, values=<span class="st">"count"</span>)
+        .<span class="fn">fillna</span>(0)
+        .<span class="fn">astype</span>(int)
+    )
+
+    <span class="kw">if</span> year_range <span class="kw">is not</span> <span class="nb">None</span>:                          <span class="cm"># ② 全年のカラムを補完</span>
+        all_years = <span class="fn">list</span>(<span class="fn">range</span>(year_range[0], year_range[1] + 1))
+        pivot = pivot.<span class="fn">reindex</span>(columns=all_years, fill_value=0)
+
+    pivot = pivot.<span class="fn">loc</span>[pivot.<span class="fn">sum</span>(axis=1).<span class="fn">sort_values</span>(ascending=<span class="nb">False</span>).index]
+
+    fig = px.<span class="fn">imshow</span>(
+        pivot,
+        labels={<span class="st">"x"</span>: <span class="st">"出願年"</span>, <span class="st">"y"</span>: <span class="st">"出願人"</span>, <span class="st">"color"</span>: <span class="st">"件数"</span>},
+        color_continuous_scale=<span class="st">"Blues"</span>,
+        aspect=<span class="st">"auto"</span>,
+        text_auto=<span class="nb">True</span>,
+        title=<span class="st">"出願人 × 年 PIVOTテーブル（件数）"</span>,
+    )
+    fig.<span class="fn">update_layout</span>(xaxis_title=<span class="st">"出願年"</span>, yaxis_title=<span class="st">"出願人"</span>)
+    <span class="kw">return</span> fig</code></pre>
+
+<h4>データの流れ</h4>
+<div class="flow">
+  <div class="flow-box">特許DataFrame<br>（1行＝1件）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">groupby + size<br>（出願人×年の件数）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">pivot<br>（クロス集計表）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">reindex<br>（全年を補完）</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">px.imshow<br>（ヒートマップ）</div>
+</div>
+
+<h4><code>px.imshow</code> の主なオプション</h4>
+<table>
+  <tr><th>引数</th><th>説明</th></tr>
+  <tr><td><code>color_continuous_scale="Blues"</code></td><td>カラースケールを青のグラデーションにする</td></tr>
+  <tr><td><code>aspect="auto"</code></td><td>縦横比を自動調整（セルを正方形に固定しない）</td></tr>
+  <tr><td><code>text_auto=True</code></td><td>各セルに数値を自動表示する</td></tr>
+</table>
+
+
+<!-- ===== 関数② ===== -->
+<h3 id="fn2">関数② chart_bar_applicant　横向き棒グラフ</h3>
+
+<pre><code><span class="kw">def</span> <span class="fn">chart_bar_applicant</span>(df: <span class="tp">pd.DataFrame</span>) -> <span class="tp">go.Figure</span>:
+    counts = (
+        df[COL_APPLICANT]
+        .<span class="fn">value_counts</span>()           <span class="cm"># 出願人ごとの件数（多い順）</span>
+        .<span class="fn">reset_index</span>()             <span class="cm"># Series → DataFrame に変換</span>
+    )
+    counts.columns = [COL_APPLICANT, <span class="st">"count"</span>]   <span class="cm"># 列名を整える</span>
+
+    fig = px.<span class="fn">bar</span>(
+        counts,
+        x=<span class="st">"count"</span>,
+        y=COL_APPLICANT,
+        orientation=<span class="st">"h"</span>,          <span class="cm"># "h" = horizontal（横向き）</span>
+        color=<span class="st">"count"</span>,            <span class="cm"># 件数で色を変える</span>
+        color_continuous_scale=<span class="st">"Teal"</span>,
+    )
+    fig.<span class="fn">update_layout</span>(yaxis={<span class="st">"categoryorder"</span>: <span class="st">"total ascending"</span>})
+    <span class="kw">return</span> fig</code></pre>
+
+<div class="box box-green">
+  <div class="box-title">categoryorder: "total ascending" とは</div>
+  棒グラフの Y 軸（カテゴリ軸）の並び順を「件数が少ない順」に設定します。<br>
+  横棒グラフでは下から上に描画されるため、結果的に<strong>一番件数が多い出願人が一番上</strong>に表示されます。
+</div>
+
+
+<!-- ===== 関数③ ===== -->
+<h3 id="fn3">関数③ chart_ipc_distribution　IPC コード分布棒グラフ</h3>
+
+<pre><code><span class="kw">def</span> <span class="fn">chart_ipc_distribution</span>(df: <span class="tp">pd.DataFrame</span>, top_n: <span class="tp">int</span> = 30) -> <span class="tp">go.Figure</span>:
+    ipc_counts = (
+        df[COL_IPC_MAIN]
+        .<span class="fn">value_counts</span>()
+        .<span class="fn">head</span>(top_n)              <span class="cm"># 上位 top_n 件だけ取り出す</span>
+        .<span class="fn">reset_index</span>()
+    )
+    ipc_counts.columns = [<span class="st">"ipc"</span>, <span class="st">"count"</span>]
+
+    fig = px.<span class="fn">bar</span>(
+        ipc_counts,
+        x=<span class="st">"ipc"</span>,
+        y=<span class="st">"count"</span>,
+        title=<span class="nb">f</span><span class="st">"IPCコード分布（上位{top_n}クラス）"</span>,   <span class="cm"># f文字列で変数を埋め込む</span>
+        color_continuous_scale=<span class="st">"Viridis"</span>,
+    )
+    fig.<span class="fn">update_layout</span>(xaxis_tickangle=-45)       <span class="cm"># X軸ラベルを45度傾ける</span>
+    <span class="kw">return</span> fig</code></pre>
+
+<div class="box box-blue">
+  <div class="box-title">デフォルト引数：top_n: int = 30</div>
+  <code>top_n = 30</code> はデフォルト値です。<br>
+  <code>chart_ipc_distribution(df)</code>　→ top_n は 30<br>
+  <code>chart_ipc_distribution(df, top_n=10)</code>　→ top_n は 10<br>
+  呼び出し側で省略できるため、柔軟に使えます。
+</div>
+
+<div class="box box-green">
+  <div class="box-title">f 文字列（f-string）</div>
+  <code>f"上位{top_n}クラス"</code> の先頭の <code>f</code> は「フォーマット文字列」の印です。<br>
+  <code>{}</code> の中に変数や式を書くと、その値が文字列に埋め込まれます。<br>
+  例：<code>top_n = 30</code> のとき → <code>"上位30クラス"</code>
+</div>
+
+
+<!-- ===== 関数④ ===== -->
+<h3 id="fn4">関数④ chart_trend_by_applicant　年別トレンド折れ線グラフ</h3>
+
+<pre><code><span class="kw">def</span> <span class="fn">chart_trend_by_applicant</span>(df: <span class="tp">pd.DataFrame</span>) -> <span class="tp">go.Figure</span>:
+    trend = (
+        df.<span class="fn">dropna</span>(subset=[COL_YEAR])
+        .<span class="fn">groupby</span>([COL_YEAR, COL_APPLICANT])
+        .<span class="fn">size</span>()
+        .<span class="fn">reset_index</span>(name=<span class="st">"count"</span>)
+    )
+    trend[COL_YEAR] = trend[COL_YEAR].<span class="fn">astype</span>(int)
+
+    fig = px.<span class="fn">line</span>(
+        trend,
+        x=COL_YEAR,
+        y=<span class="st">"count"</span>,
+        color=COL_APPLICANT,        <span class="cm"># 出願人ごとに色を変えてラインを描く</span>
+        markers=<span class="nb">True</span>,              <span class="cm"># データ点にマーカーを表示</span>
+    )
+    fig.<span class="fn">update_layout</span>(xaxis={<span class="st">"dtick"</span>: 1})   <span class="cm"># X軸の目盛りを1年おきに</span>
+    <span class="kw">return</span> fig</code></pre>
+
+<div class="box box-blue">
+  <div class="box-title">color=COL_APPLICANT の効果</div>
+  <code>px.line</code> に <code>color</code> 引数を指定すると、その列の値（出願人名）ごとに自動で色を変えてラインを描きます。<br>
+  凡例（Legend）も自動で生成されます。
+</div>
+<div class="box box-green">
+  <div class="box-title">update_layout でグラフを細かく調整</div>
+  <code>fig.update_layout(xaxis={"dtick": 1})</code> は「X軸のメモリ間隔を1にする」という設定です。<br>
+  <code>px</code> でグラフを作成した後、<code>update_layout</code> や <code>update_traces</code> で細かい見た目を変更するのが Plotly の基本パターンです。
+</div>
+
+
+<!-- ===== 関数⑤ ===== -->
+<h3 id="fn5">関数⑤ chart_bubble　バブルチャート</h3>
+
+<pre><code><span class="kw">def</span> <span class="fn">chart_bubble</span>(df: <span class="tp">pd.DataFrame</span>) -> <span class="tp">go.Figure</span>:
+    bubble_df = (
+        df.<span class="fn">dropna</span>(subset=[COL_YEAR])
+        .<span class="fn">groupby</span>([COL_YEAR, COL_APPLICANT])
+        .<span class="fn">size</span>()
+        .<span class="fn">reset_index</span>(name=<span class="st">"count"</span>)
+    )
+    bubble_df[COL_YEAR] = bubble_df[COL_YEAR].<span class="fn">astype</span>(int)
+
+    fig = px.<span class="fn">scatter</span>(
+        bubble_df,
+        x=COL_YEAR,
+        y=COL_APPLICANT,
+        size=<span class="st">"count"</span>,             <span class="cm"># バブルのサイズを件数で決める</span>
+        color=COL_APPLICANT,
+        size_max=60,              <span class="cm"># バブルの最大サイズ（ピクセル）</span>
+    )
+    fig.<span class="fn">update_layout</span>(xaxis={<span class="st">"dtick"</span>: 1}, showlegend=<span class="nb">False</span>)
+    <span class="kw">return</span> fig</code></pre>
+
+<div class="box box-blue">
+  <div class="box-title">px.scatter と size 引数</div>
+  <code>px.scatter</code> は散布図を描きます。<code>size</code> に列名を指定すると、その値に応じてバブル（円）の大きさが変わります。<br>
+  X軸に年、Y軸に出願人を置くことで「誰がいつ多く出願したか」が一目で分かります。<br>
+  <code>showlegend=False</code> は凡例を非表示にする設定です（Y軸に出願人名が並ぶため重複するから）。
+</div>
+
+
+<!-- ===== 関数⑥ ===== -->
+<h3 id="fn6">関数⑥ chart_ipc_by_applicant　ドーナツ円グラフ</h3>
+
+<pre><code><span class="kw">def</span> <span class="fn">chart_ipc_by_applicant</span>(df: <span class="tp">pd.DataFrame</span>, applicant: <span class="tp">str</span>) -> <span class="tp">go.Figure</span>:
+    sub = df[df[COL_APPLICANT] == applicant]   <span class="cm"># ① 指定出願人だけ抽出</span>
+
+    <span class="kw">if</span> sub.<span class="fn">empty</span>:                              <span class="cm"># ② データがなければ空グラフを返す</span>
+        fig = go.<span class="fn">Figure</span>()
+        fig.<span class="fn">add_annotation</span>(text=<span class="st">"データがありません"</span>, x=0.5, y=0.5, showarrow=<span class="nb">False</span>)
+        <span class="kw">return</span> fig
+
+    ipc_series = sub[COL_IPC_LIST].<span class="fn">explode</span>()  <span class="cm"># ③ リストを1行1要素に展開</span>
+    ipc_counts = (
+        ipc_series[ipc_series.<span class="fn">notna</span>() &amp; (ipc_series != <span class="st">""</span>)]   <span class="cm"># ④ 空・NaN を除外</span>
+        .<span class="fn">value_counts</span>()
+        .<span class="fn">reset_index</span>()
+    )
+    ipc_counts.columns = [<span class="st">"ipc"</span>, <span class="st">"count"</span>]
+
+    fig = px.<span class="fn">pie</span>(
+        ipc_counts,
+        names=<span class="st">"ipc"</span>,
+        values=<span class="st">"count"</span>,
+        title=<span class="nb">f</span><span class="st">"IPCコード分布：{applicant}"</span>,
+        hole=0.35,                <span class="cm"># ⑤ 中央に穴を開けてドーナツ型にする</span>
+    )
+    fig.<span class="fn">update_traces</span>(textposition=<span class="st">"inside"</span>, textinfo=<span class="st">"percent+label"</span>)
+    <span class="kw">return</span> fig</code></pre>
+
+<h4>ポイント解説</h4>
+
+<div class="box box-blue">
+  <div class="box-title"><span class="step">④</span> 複合条件フィルター</div>
+  <code>ipc_series[ipc_series.notna() &amp; (ipc_series != "")]</code><br><br>
+  <code>&amp;</code> は「かつ（AND）」を意味する pandas のビット演算子です。<br>
+  <code>notna()</code>：NaN でない行を True にする<br>
+  <code>ipc_series != ""</code>：空文字列でない行を True にする<br>
+  両方 True の行だけが残ります。<br><br>
+  <strong>注意</strong>：Python 通常の <code>and</code> は使えません。pandas では必ず <code>&amp;</code>（AND）、<code>|</code>（OR）を使います。
+</div>
+
+<div class="box box-green">
+  <div class="box-title"><span class="step">⑤</span> hole=0.35 でドーナツ型に</div>
+  <code>px.pie</code> に <code>hole=0.35</code> を指定すると、中央が 35% 抜けたドーナツ型（別名：ドーナツチャート）になります。<br>
+  0.0 = 普通の円グラフ、1.0 = 全部穴（何も表示されない）
+</div>
+
+<div class="box box-orange">
+  <div class="box-title">early return パターン</div>
+  <code>if sub.empty: ... return fig</code> のように、<strong>エラー条件を先に return で処理</strong>するパターンを「早期リターン（early return）」と言います。<br>
+  ネストが深くなるのを防ぎ、メインの処理を読みやすく保てます。
+</div>
+
+
+<!-- ===== 6. Plotly の基本パターン ===== -->
+<h2 id="sec6">6. Plotly の基本パターン</h2>
+
+<h3>グラフ作成の2ステップ</h3>
+<pre><code><span class="cm"># ステップ1：グラフを生成する</span>
+fig = px.<span class="fn">bar</span>(df, x=<span class="st">"year"</span>, y=<span class="st">"count"</span>, ...)
+
+<span class="cm"># ステップ2：レイアウトや見た目を調整する</span>
+fig.<span class="fn">update_layout</span>(...)
+fig.<span class="fn">update_traces</span>(...)
+
+<span class="cm"># ステップ3：Streamlit に渡す（app.py 側）</span>
+st.<span class="fn">plotly_chart</span>(fig, use_container_width=<span class="nb">True</span>)</code></pre>
+
+<h3>px の主要なグラフ関数</h3>
+<table>
+  <tr><th>関数</th><th>グラフの種類</th><th>このアプリでの使用</th></tr>
+  <tr><td><code>px.imshow</code></td><td>ヒートマップ・画像</td><td>出願人×年のPIVOTテーブル</td></tr>
+  <tr><td><code>px.bar</code></td><td>棒グラフ</td><td>出願人別件数、IPC分布</td></tr>
+  <tr><td><code>px.line</code></td><td>折れ線グラフ</td><td>年別トレンド</td></tr>
+  <tr><td><code>px.scatter</code></td><td>散布図・バブルチャート</td><td>バブルチャート</td></tr>
+  <tr><td><code>px.pie</code></td><td>円グラフ・ドーナツ</td><td>特定出願人のIPC分布</td></tr>
+</table>
+
+<h3>update_layout の主な設定</h3>
+<table>
+  <tr><th>設定</th><th>効果</th></tr>
+  <tr><td><code>xaxis_title="出願年"</code></td><td>X軸のタイトル文字を変更</td></tr>
+  <tr><td><code>yaxis_title="出願人"</code></td><td>Y軸のタイトル文字を変更</td></tr>
+  <tr><td><code>xaxis={"dtick": 1}</code></td><td>X軸の目盛り間隔を1にする</td></tr>
+  <tr><td><code>yaxis={"categoryorder": "total ascending"}</code></td><td>Y軸を件数の昇順に並べる</td></tr>
+  <tr><td><code>showlegend=False</code></td><td>凡例を非表示にする</td></tr>
+</table>
+
+
+<!-- ===== 7. 学習チェックリスト ===== -->
+<h2 id="sec7">7. 学習チェックリスト</h2>
+
+<p>このファイルを読んで理解できたか確認しましょう。</p>
+
+<div class="box box-gray">
+  <div class="box-title">pandas 編</div>
+  <ul>
+    <li>☐ <code>dropna()</code> で欠損行を除去できる</li>
+    <li>☐ <code>.copy()</code> の必要性が説明できる</li>
+    <li>☐ <code>groupby + size + reset_index</code> の流れが追える</li>
+    <li>☐ <code>pivot()</code> で縦長テーブルをクロス集計表に変換できる</li>
+    <li>☐ <code>fillna(0)</code> で欠損を0に埋められる</li>
+    <li>☐ <code>reindex(columns=..., fill_value=0)</code> で存在しない列を追加できる</li>
+    <li>☐ <code>sum(axis=1)</code> が行方向の合計であることが分かる</li>
+    <li>☐ <code>value_counts()</code> で出現頻度を集計できる</li>
+    <li>☐ <code>explode()</code> でリスト列を行に展開できる</li>
+    <li>☐ 複合条件フィルターで <code>&amp;</code> を使う理由が分かる</li>
+  </ul>
+</div>
+
+<div class="box box-gray">
+  <div class="box-title">Python 基礎編</div>
+  <ul>
+    <li>☐ 型ヒント（<code>: pd.DataFrame</code>、<code>-> go.Figure</code>）の意味が分かる</li>
+    <li>☐ <code>X | None</code> の型ヒントが「X か None のどちらか」であることが分かる</li>
+    <li>☐ デフォルト引数（<code>top_n: int = 30</code>）の使い方が分かる</li>
+    <li>☐ f 文字列（<code>f"上位{top_n}クラス"</code>）が使える</li>
+    <li>☐ メソッドチェーンの仕組みが説明できる</li>
+    <li>☐ early return パターンの利点が説明できる</li>
+  </ul>
+</div>
+
+<div class="box box-gray">
+  <div class="box-title">Plotly 編</div>
+  <ul>
+    <li>☐ <code>px</code> と <code>go</code> の使い分けが分かる</li>
+    <li>☐ <code>px.bar / px.line / px.scatter / px.pie / px.imshow</code> の違いが分かる</li>
+    <li>☐ <code>update_layout</code> でグラフを後から調整できることが分かる</li>
+    <li>☐ <code>color</code> 引数で自動的に色分けと凡例を生成できることが分かる</li>
+  </ul>
+</div>
+
+<hr>
+<p style="color:#90a4ae; font-size:0.85rem; text-align:center;">
+  charts.py Python 学習用解説書　／　特許マップビューアー
+</p>
+
+</div>
+</body>
+</html>
